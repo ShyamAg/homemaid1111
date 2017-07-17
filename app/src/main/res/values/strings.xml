@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">HomeMaid</string>
+    <string name="welcome_text">Welcome to Home Maid!</string>
+    <string name="copyright_text">Copyright - HomeMaid 2017</string>
+    <string name="sign_up_text">Sign Up on Home Maid!</string>
+    <string name="err_msg_mobile_number">Mobile number cannot be empty</string>
+    <string name="err_msg_mobile_number_wrong">Please enter correct mobile number</string>
+    <string name="err_msg_email">Please enter email ID</string>
+    <string name="err_msg_email_valid">Please enter valid email ID</string>
+    <string name="err_msg_full_name">Please enter full name</string>
+
+    <string name="facebook_app_id">314350802357922</string>
+    <string name="fb_login_protocol_scheme">fb314350802357922</string>
+
+    <string name="loading">Loading...</string>
+
+</resources>
