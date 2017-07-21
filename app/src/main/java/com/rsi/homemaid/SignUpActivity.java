@@ -17,9 +17,12 @@ import java.util.regex.Pattern;
 
 import bean.Login;
 import bean.Registration;
+import bean.UserDetails;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tools.AppSharedPreference;
+import tools.HelperMethods;
 
 /**
  * Created by deepak.sharma on 7/12/2017.
@@ -70,13 +73,19 @@ public class SignUpActivity extends BaseLoginActivity {
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!HelperMethods.isNetworkConnected(SignUpActivity.this)){
+                    showCustomToast(et_mobile_number, "No internet Connection !");
+                    return;
+                }
             if (validateFields()){
-                Call<Registration> call = apiService.getRegistration(getRegistrationJson(et_mobile_number.getText().toString(), et_email_address.getText().toString(), et_full_name.getText().toString(), photo_url, "RG",loginType).toString());
-                call.enqueue(new Callback<Registration>() {
+                Call<Login> call = apiService.getRegistration(getRegistrationJson(et_mobile_number.getText().toString(), et_email_address.getText().toString(), et_full_name.getText().toString(), photo_url, "RG",loginType).toString());
+                call.enqueue(new Callback<Login>() {
                     @Override
-                    public void onResponse(Call<Registration> call, Response<Registration> response) {
+                    public void onResponse(Call<Login> call, Response<Login> response) {
                         if (response.body().getStatus().equalsIgnoreCase("success")){
-
+                            dbHelper.deleteUserDetails();
+                            dbHelper.insertUserDetails(response.body().getUserDetails());
+                            AppSharedPreference.getInstance(SignUpActivity.this).setIsLogin(true);
                             Intent mIntent = new Intent(SignUpActivity.this, HomeActivity.class);
                             mIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(mIntent);
@@ -86,7 +95,7 @@ public class SignUpActivity extends BaseLoginActivity {
                         }
                     }
                     @Override
-                    public void onFailure(Call<Registration> call, Throwable t) {
+                    public void onFailure(Call<Login> call, Throwable t) {
                         Toast.makeText(SignUpActivity.this,"Failure", Toast.LENGTH_SHORT).show();
                     }
                 });

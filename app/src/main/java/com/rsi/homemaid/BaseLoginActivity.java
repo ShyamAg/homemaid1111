@@ -1,14 +1,19 @@
 package com.rsi.homemaid;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -30,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import bean.Login;
+import bean.Registration;
+import database.DatabaseHelper;
 import retrofit.ApiClient;
 import retrofit.ApiInterface;
 import retrofit2.Call;
@@ -51,10 +58,13 @@ public class BaseLoginActivity extends AppCompatActivity implements GoogleApiCli
     protected static final String TAG = BaseLoginActivity.class.getSimpleName();
 
     protected ProgressDialog mProgressDialog;
+    protected DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dbHelper = DatabaseHelper.getInstance(this);
         apiService = ApiClient.getClient().create(ApiInterface.class);
         callbackManager = CallbackManager.Factory.create();
 
@@ -159,6 +169,9 @@ public class BaseLoginActivity extends AppCompatActivity implements GoogleApiCli
                             public void onResponse(Call<Login> call, Response<Login> response) {
                                 if (response.body().getStatus().equalsIgnoreCase("success")){
                                     setUserDetails(response);
+                                    dbHelper.deleteUserDetails();
+                                    dbHelper.insertUserDetails(response.body().getUserDetails());
+                                    AppSharedPreference.getInstance(BaseLoginActivity.this).setIsLogin(true);
                                     startActivity(new Intent(BaseLoginActivity.this, HomeActivity.class));
                                     finish();
                                 }else if (response.body().getStatus().equalsIgnoreCase("failed")){
@@ -204,6 +217,9 @@ public class BaseLoginActivity extends AppCompatActivity implements GoogleApiCli
                 public void onResponse(Call<Login> call, Response<Login> response) {
                     if (response.body().getStatus().equalsIgnoreCase("success")){
                         setUserDetails(response);
+                        dbHelper.deleteUserDetails();
+                        dbHelper.insertUserDetails(response.body().getUserDetails());
+                        AppSharedPreference.getInstance(BaseLoginActivity.this).setIsLogin(true);
                         startActivity(new Intent(BaseLoginActivity.this, HomeActivity.class));
                         finish();
                     }else if (response.body().getStatus().equalsIgnoreCase("failed")){
@@ -266,5 +282,16 @@ public class BaseLoginActivity extends AppCompatActivity implements GoogleApiCli
         AppSharedPreference.getInstance(BaseLoginActivity.this).setEmail(response.body().getUserDetails().getEmail());
         AppSharedPreference.getInstance(BaseLoginActivity.this).setProfilePic(response.body().getUserDetails().getProfilePic());
         AppSharedPreference.getInstance(BaseLoginActivity.this).setLocality(response.body().getUserDetails().getLocality());
+    }
+
+    protected void showCustomToast(View view, String message){
+        Snackbar snackbar = Snackbar
+                .make(view, message , Snackbar.LENGTH_LONG);
+        View sbView = snackbar.getView();
+        sbView.setBackgroundColor(ContextCompat.getColor(this, R.color.red_color));
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(15);
+        snackbar.show();
     }
 }

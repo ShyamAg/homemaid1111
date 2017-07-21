@@ -1,6 +1,8 @@
 package retrofit;
 
+import bean.CategoryDataClass;
 import bean.Login;
+import bean.MaidDataClass;
 import bean.Registration;
 import bean.Splash;
 import retrofit2.Call;
@@ -16,11 +18,19 @@ public interface ApiInterface {
 
     @Headers("Content-Type: application/json")
     @POST("registration.php")
-    Call<Registration> getRegistration(@Body String body);
+    Call<Login> getRegistration(@Body String body);
 
     @Headers("Content-Type: application/json")
     @POST("userMobileDetails.php")
     Call<Splash> getDeviceDetails(@Body String body);
+
+    @Headers("Content-Type: application/json")
+    @POST("categoryDetails.php")
+    Call<CategoryDataClass> getCategories();
+
+    @Headers("Content-Type: application/json")
+    @POST("maidList.php")
+    Call<MaidDataClass> getMaidsList(@Body String body);
 
 
 }

@@ -2,8 +2,10 @@ package com.rsi.homemaid;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,11 +19,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import bean.Login;
 import bean.Splash;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import tools.AppSharedPreference;
 import tools.HelperMethods;
 
 public class SplashActivity extends BaseActivity implements
@@ -48,9 +50,24 @@ public class SplashActivity extends BaseActivity implements
 
     @Override
     public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (location == null) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            if (AppSharedPreference.getInstance(SplashActivity.this).getIsLogin())  //TODO: Need to be remove
+                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+            else
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+            finish();
         } else {
             currentLatitude = location.getLatitude();
             currentLongitude = location.getLongitude();
@@ -60,6 +77,10 @@ public class SplashActivity extends BaseActivity implements
                 @Override
                 public void onResponse(Call<Splash> call, Response<Splash> response) {
                     if (response.body().getStatus().equalsIgnoreCase("success")){
+
+                        if (AppSharedPreference.getInstance(SplashActivity.this).getIsLogin())
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                        else
                         startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                         finish();
                     }else {
@@ -68,6 +89,11 @@ public class SplashActivity extends BaseActivity implements
                 @Override
                 public void onFailure(Call<Splash> call, Throwable t) {
                     System.out.print(call);
+                    if (AppSharedPreference.getInstance(SplashActivity.this).getIsLogin())  //TODO: Need to be remove
+                        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    else
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    finish();
                 }
             });
         }

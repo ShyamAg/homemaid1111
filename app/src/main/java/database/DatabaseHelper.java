@@ -69,7 +69,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void insertUserDetails(UserDetails userDetails) {
         UserDetailsDataClassRuntimeDao = getUsersDetailDao();
-        UserDetailsDataClassRuntimeDao.create(userDetails);
+            UserDetailsDataClassRuntimeDao.create(userDetails);
     }
 
     public List<UserDetails> getUserDetails(){

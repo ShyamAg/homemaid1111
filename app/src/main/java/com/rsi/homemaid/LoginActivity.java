@@ -30,12 +30,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Arrays;
 import bean.Login;
+import database.DatabaseHelper;
 import retrofit.ApiClient;
 import retrofit.ApiInterface;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import tools.AppSharedPreference;
+import tools.HelperMethods;
 
 /**
  * Created by deepak.sharma on 7/12/2017.
@@ -46,6 +48,8 @@ public class LoginActivity extends BaseLoginActivity {
     private EditText et_mobile_number;
     private Button btn_login, fb_button, btn_google;
     private Dialog mOverlayDialog ;
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +66,10 @@ public class LoginActivity extends BaseLoginActivity {
             @Override
             public void onClick(View v) {
                 final Intent mIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+                if (!HelperMethods.isNetworkConnected(LoginActivity.this)){
+                    showCustomToast(et_mobile_number, "No internet Connection !");
+                    return;
+                }
                 if (validateMobileNumber()){
                     mOverlayDialog.setCancelable(false);
                     mOverlayDialog.show();
@@ -72,6 +80,9 @@ public class LoginActivity extends BaseLoginActivity {
                             mOverlayDialog.cancel();
                             if (response.body().getStatus().equalsIgnoreCase("success")){
                                 setUserDetails(response);
+                                dbHelper.deleteUserDetails();
+                                dbHelper.insertUserDetails(response.body().getUserDetails());
+                                AppSharedPreference.getInstance(LoginActivity.this).setIsLogin(true);
                                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                 finish();
                             }else if(response.body().getStatus().equalsIgnoreCase("failed")){

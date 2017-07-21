@@ -8,4 +8,9 @@
     <color name="grey">#DFDFDF</color>
     <color name="text_grey">#747474</color>
     <color name="blue_fb">#2A5A8B</color>
+    <color name="limegreen">#32CD32</color>
+    <color name="darkgreen">#006400</color>
+    <color name="red_color">#ff0000</color>
+    <color name="dark_red_color">#7f0000</color>
+    <color name="orange">#FF4500</color>
 </resources>

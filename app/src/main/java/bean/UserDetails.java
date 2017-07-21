@@ -2,13 +2,21 @@
 package bean;
 
 
+import com.j256.ormlite.field.DatabaseField;
+
 public class UserDetails {
 
+    @DatabaseField
     private String fullName;
+    @DatabaseField
     private String mobile;
+    @DatabaseField
     private String email;
+    @DatabaseField
     private String profilePic;
+    @DatabaseField
     private String locality;
+    @DatabaseField
     private String userId;
 
     public String getFullName() {

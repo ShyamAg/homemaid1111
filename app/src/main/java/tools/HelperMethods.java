@@ -1,8 +1,15 @@
 package tools;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
+import android.view.View;
+import android.widget.TextView;
+
+import com.rsi.homemaid.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -31,4 +38,6 @@ public class HelperMethods {
         String time = dfTime.format(Calendar.getInstance().getTime());
         return date + " " + time;
     }
+
+
 }
