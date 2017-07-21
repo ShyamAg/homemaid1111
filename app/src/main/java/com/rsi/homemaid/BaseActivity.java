@@ -1,5 +1,6 @@
 package com.rsi.homemaid;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ public class BaseActivity extends AppCompatActivity {
 
     protected ApiInterface apiService;
     protected DatabaseHelper dbHelper;
+    protected ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +32,10 @@ public class BaseActivity extends AppCompatActivity {
         apiService = ApiClient.getClient().create(ApiInterface.class);
         dbHelper = DatabaseHelper.getInstance(this);
 
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.setCancelable(false);
     }
 
     void showMessage(String title, String message) {

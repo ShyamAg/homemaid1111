@@ -1,5 +1,6 @@
 package com.rsi.homemaid;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -57,20 +58,20 @@ public class MaidListActivity extends BaseActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         Call<MaidDataClass> call = apiService.getMaidsList(getMaidsJson(getIntent().getExtras().getString("CatId")).toString());
+        mProgressDialog.show();
         call.enqueue(new Callback<MaidDataClass>() {
             @Override
             public void onResponse(Call<MaidDataClass> call, Response<MaidDataClass> response) {
+
+                if (mProgressDialog.isShowing())
+                    mProgressDialog.dismiss();
                 if (response.body().getStatus().equalsIgnoreCase("success")){
 
                     maidLists = response.body().getMaidList();
                     maidListRecyclerAdapter = new MaidListRecyclerAdapter(MaidListActivity.this, response.body().getMaidList(), new MaidListRecyclerAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(MaidList item) {
-
-
                             startActivity(new Intent(MaidListActivity.this, MaidDetailsActivity.class));
-
-
                         }
                     });
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -82,6 +83,8 @@ public class MaidListActivity extends BaseActivity {
             }
             @Override
             public void onFailure(Call<MaidDataClass> call, Throwable t) {
+                if (mProgressDialog.isShowing())
+                    mProgressDialog.dismiss();
                 showCustomToast(recyclerView, getString(R.string.err_message_retrofit));
             }
         });

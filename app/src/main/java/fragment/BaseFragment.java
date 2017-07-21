@@ -1,5 +1,6 @@
 package fragment;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,10 +36,17 @@ public class BaseFragment extends Fragment implements BaseSliderView.OnSliderCli
     protected ApiInterface apiService;
     protected HashMap<String,String> url_maps ;
     protected HashMap<String,Integer> file_maps;
+    protected ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.setCancelable(false);
+
         dbHelper = DatabaseHelper.getInstance(getActivity());
         apiService = ApiClient.getClient().create(ApiInterface.class);
 

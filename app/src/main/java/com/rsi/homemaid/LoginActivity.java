@@ -74,9 +74,13 @@ public class LoginActivity extends BaseLoginActivity {
                     mOverlayDialog.setCancelable(false);
                     mOverlayDialog.show();
                     Call<Login> call = apiService.loginValidation(getLoginJson(et_mobile_number.getText().toString(), "NA","NA", "Mobile").toString());
+                    mProgressDialog.show();
                     call.enqueue(new Callback<Login>() {
                         @Override
                         public void onResponse(Call<Login> call, Response<Login> response) {
+
+                            if (mProgressDialog.isShowing())
+                                mProgressDialog.dismiss();
                             mOverlayDialog.cancel();
                             if (response.body().getStatus().equalsIgnoreCase("success")){
                                 setUserDetails(response);
@@ -93,8 +97,9 @@ public class LoginActivity extends BaseLoginActivity {
                         }
                         @Override
                         public void onFailure(Call<Login> call, Throwable t) {
-                            System.out.print(call);
-                            Toast.makeText(LoginActivity.this,"Failure", Toast.LENGTH_SHORT).show();
+                            if (mProgressDialog.isShowing())
+                                mProgressDialog.dismiss();
+                           showCustomToast(et_mobile_number, getString(R.string.err_message_retrofit));
                             mOverlayDialog.cancel();
                         }
                     });

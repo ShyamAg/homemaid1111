@@ -64,6 +64,11 @@ public class BaseLoginActivity extends AppCompatActivity implements GoogleApiCli
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.setCancelable(false);
+
         dbHelper = DatabaseHelper.getInstance(this);
         apiService = ApiClient.getClient().create(ApiInterface.class);
         callbackManager = CallbackManager.Factory.create();

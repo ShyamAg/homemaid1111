@@ -79,9 +79,12 @@ public class SignUpActivity extends BaseLoginActivity {
                 }
             if (validateFields()){
                 Call<Login> call = apiService.getRegistration(getRegistrationJson(et_mobile_number.getText().toString(), et_email_address.getText().toString(), et_full_name.getText().toString(), photo_url, "RG",loginType).toString());
+                mProgressDialog.show();
                 call.enqueue(new Callback<Login>() {
                     @Override
                     public void onResponse(Call<Login> call, Response<Login> response) {
+                        if(mProgressDialog.isShowing())
+                            mProgressDialog.dismiss();
                         if (response.body().getStatus().equalsIgnoreCase("success")){
                             dbHelper.deleteUserDetails();
                             dbHelper.insertUserDetails(response.body().getUserDetails());
@@ -96,7 +99,9 @@ public class SignUpActivity extends BaseLoginActivity {
                     }
                     @Override
                     public void onFailure(Call<Login> call, Throwable t) {
-                        Toast.makeText(SignUpActivity.this,"Failure", Toast.LENGTH_SHORT).show();
+                        if(mProgressDialog.isShowing())
+                            mProgressDialog.dismiss();
+                            showCustomToast(et_email_address, getString(R.string.err_message_retrofit));
                     }
                 });
             }

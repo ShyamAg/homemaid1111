@@ -55,10 +55,13 @@ public class HomeFragment extends BaseFragment {
         grid.setVerticalScrollBarEnabled(false);
 
         Call<CategoryDataClass> call = apiService.getCategories();
+        mProgressDialog.show();
         call.enqueue(new Callback<CategoryDataClass>() {
             @Override
             public void onResponse(Call<CategoryDataClass> call, Response<CategoryDataClass> response) {
 
+                if (mProgressDialog.isShowing())
+                    mProgressDialog.dismiss();
                 if (response.body().getStatus().equals("success")){
                     categoryDetails = response.body().getCategoryDetails();
                     gridViewHomeAdapter = new GridViewHomeAdapter(getActivity(), response.body().getCategoryDetails());
@@ -68,7 +71,8 @@ public class HomeFragment extends BaseFragment {
             }
             @Override
             public void onFailure(Call<CategoryDataClass> call, Throwable t) {
-                System.out.print(call);
+                if (mProgressDialog.isShowing())
+                    mProgressDialog.dismiss();
                     showCustomToast(grid, getResources().getString(R.string.err_message_retrofit));
             }
         });
