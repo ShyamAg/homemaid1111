@@ -37,6 +37,7 @@ public class HomeActivity extends BaseActivity implements FragmentDrawer.Fragmen
         setContentView(R.layout.activity_home);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar.findViewById(R.id.llContainer).setVisibility(View.VISIBLE);
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

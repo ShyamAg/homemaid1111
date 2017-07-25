@@ -71,7 +71,7 @@ public class SplashActivity extends BaseActivity implements
         } else {
             currentLatitude = location.getLatitude();
             currentLongitude = location.getLongitude();
-            Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, currentLatitude + " WORKS " + currentLongitude + "", Toast.LENGTH_LONG).show();
             Call<Splash> call = apiService.getDeviceDetails(getDeviceDetailsJson(HelperMethods.getDeviceId(SplashActivity.this), "155@sd!$%he^ru#y", HelperMethods.getCurrentDateTime(), String.valueOf(currentLatitude), String.valueOf(currentLongitude)).toString());
             call.enqueue(new Callback<Splash>() {
                 @Override

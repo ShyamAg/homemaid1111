@@ -53,4 +53,28 @@
 
     <string name="Rs">\u20B9</string>
 
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Hello Users</string>
+    <string name="slide_1_desc">The easiest way to find maids in your society.</string>
+
+    <string name="slide_2_title">Important Notice</string>
+    <string name="slide_2_desc">Make sure! We are just showing the available maids in your locality. We are not providing the maid services. These maids have a valid ID card issued by RG Residency.</string>
+
+    <string name="slide_3_title">Terms and Conditions</string>
+    <string name="slide_3_desc">We are not responsible if any mishappening occurs. Please verify the maids by yourself as well before assign work to them. </string>
+
+    <string name="slide_4_title">Thanks!</string>
+    <string name="slide_4_desc">This service is absolutely free as of now. We are improving our services on daily basis. Thanks to Everyone for their co-operation.</string>
+
+    <string name="play_again_desc">To see the welcome slider again, goto Settings -> apps -> welcome slider -> clear data</string>
+    <string name="play_again">Play Again</string>
+
+    <string name="text_content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consectetur diam id aliquam scelerisque. Donec ultrices lacus vel </string>
+
+    <string name="user_name">Pawan Deshpnde</string>
+
 </resources>

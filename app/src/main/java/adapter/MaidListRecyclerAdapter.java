@@ -123,8 +123,6 @@ public class MaidListRecyclerAdapter extends RecyclerView.Adapter<MaidListRecycl
             }
         });
 
-
-
     }
 
     @Override

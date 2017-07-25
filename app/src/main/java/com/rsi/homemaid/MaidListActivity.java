@@ -1,15 +1,13 @@
 package com.rsi.homemaid;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +17,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import adapter.MaidListRecyclerAdapter;
 import bean.MaidDataClass;
 import bean.MaidList;
-import helper.RecyclerTouchListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,7 +69,10 @@ public class MaidListActivity extends BaseActivity {
                     maidListRecyclerAdapter = new MaidListRecyclerAdapter(MaidListActivity.this, response.body().getMaidList(), new MaidListRecyclerAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(MaidList item) {
-                            startActivity(new Intent(MaidListActivity.this, MaidDetailsActivity.class));
+
+                            Intent mIntent = new Intent(MaidListActivity.this, MaidDetailsActivity.class);
+                            mIntent.putExtra("Maid", item);
+                            startActivity(mIntent);
                         }
                     });
                     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());

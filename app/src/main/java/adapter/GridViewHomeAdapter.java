@@ -42,7 +42,7 @@ public class GridViewHomeAdapter extends BaseAdapter {
         this.categoryDetails = categoryDetails;
         inflater = LayoutInflater.from(context);
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.placeholder_thumb)
+                .showImageOnLoading(R.drawable.ic_profile)
                 .showImageForEmptyUri(R.drawable.ic_empty)
                 .showImageOnFail(R.drawable.ic_error)
                 .resetViewBeforeLoading(true)
@@ -62,7 +62,7 @@ public class GridViewHomeAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return categoryDetails.get(position);
     }
 
     @Override
@@ -73,23 +73,20 @@ public class GridViewHomeAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
-        View view = convertView;
-        if (view == null) {
-            view = inflater.inflate(R.layout.item_grid_view, parent, false);
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.item_grid_view, parent, false);
             holder = new ViewHolder();
-            assert view != null;
-            holder.imageView = (ImageView) view.findViewById(R.id.iv_category);
-            holder.tv_category = (TextView) view.findViewById(R.id.tv_category);
-            holder.progressBar = (ProgressBar) view.findViewById(R.id.progress);
-            holder.rl_category = (RelativeLayout) view.findViewById(R.id.rl_category);
+            holder.imageView = (ImageView) convertView.findViewById(R.id.iv_category);
+            holder.tv_category = (TextView) convertView.findViewById(R.id.tv_category);
+            holder.progressBar = (ProgressBar) convertView.findViewById(R.id.progress);
 
-            holder.tv_category.setText(categoryDetails.get(position).getName());
-
-
-            view.setTag(holder);
+            holder.tv_category.getBackground().setAlpha(70);
+            convertView.setTag(holder);
         } else {
-            holder = (ViewHolder) view.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
+
+        holder.tv_category.setText(categoryDetails.get(position).getName());
         ImageLoader.getInstance()
                 .displayImage(categoryDetails.get(position).getImage(), holder.imageView, options, new SimpleImageLoadingListener() {
                     @Override
@@ -115,13 +112,12 @@ public class GridViewHomeAdapter extends BaseAdapter {
                     }
                 });
 
-        return view;
+        return convertView;
     }
 
     static class ViewHolder {
         ImageView imageView;
         ProgressBar progressBar;
         TextView tv_category;
-        RelativeLayout rl_category;
     }
 }

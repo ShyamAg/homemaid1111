@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 
 public class AppSharedPreference {
 
+	private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
 	public static AppSharedPreference appSharedPreference;
 	private SharedPreferences sharedPreferences;
 	private Editor editor;
@@ -85,6 +86,15 @@ public class AppSharedPreference {
 
 		editor.putBoolean("is_login", b);
 		editor.commit();
+	}
+
+	public void setFirstTimeLaunch(boolean isFirstTime) {
+		editor.putBoolean(IS_FIRST_TIME_LAUNCH, isFirstTime);
+		editor.commit();
+	}
+
+	public boolean isFirstTimeLaunch() {
+		return sharedPreferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
 	}
 
 	public void clearPreference() {
