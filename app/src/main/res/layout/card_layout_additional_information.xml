@@ -32,9 +32,10 @@
 
 
             <TextView
+                android:id="@+id/tv_available_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="9 AM - 11AM \n 6 PM - 9 PM"
+                android:text="9 AM - 11AM \n6 PM - 9 PM"
                 android:layout_marginTop="5dp"
                 android:textSize="15sp"
                 android:layout_marginLeft="10dp"
@@ -45,21 +46,28 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|right"
-        android:orientation="vertical">
+        android:layout_gravity="right|bottom"
+        android:orientation="vertical"
+        android:padding="10dp">
 
 
         <TextView
             android:id="@+id/tv_veg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Veg"/>
+            android:text="Veg"
+            android:gravity="center"
+            android:drawablePadding="10dp"
+            android:drawableLeft="@drawable/icon_tick"/>
 
         <TextView
             android:id="@+id/tv_non_veg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Non Veg"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:drawableLeft="@drawable/icon_cross"
             />
 
     </LinearLayout>

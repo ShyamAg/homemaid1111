@@ -7,7 +7,8 @@
     android:elevation="3dp"
     card_view:cardCornerRadius="4dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools">
 
 <RelativeLayout
     android:layout_width="match_parent"
@@ -65,14 +66,17 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"/>
 
-            <ImageView
+            <com.like.LikeButton
                 android:id="@+id/iv_favourite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/favourite_icon"
-                android:layout_alignParentRight="true"
+                app:icon_size="22dp"
+                app:anim_scale_factor="3"
+                app:icon_type="heart"
                 android:padding="10dp"
-                android:layout_marginRight="0dp"/>
+                android:layout_alignParentRight="true"
+                />
+
 
             <TextView
                 android:id="@+id/tv_religion"

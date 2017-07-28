@@ -5,6 +5,7 @@ import bean.Login;
 import bean.MaidDataClass;
 import bean.Registration;
 import bean.Splash;
+import bean.Status;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;
@@ -31,6 +32,10 @@ public interface ApiInterface {
     @Headers("Content-Type: application/json")
     @POST("maidList.php")
     Call<MaidDataClass> getMaidsList(@Body String body);
+
+    @Headers("Content-Type: application/json")
+    @POST("getFavourate.php")
+    Call<Status> addFav(@Body String body);
 
 
 }

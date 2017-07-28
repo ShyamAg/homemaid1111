@@ -7,7 +7,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -17,14 +21,30 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.like.LikeButton;
+import com.like.OnLikeListener;
+import com.rsi.homemaid.MaidDetailsActivity;
+import com.rsi.homemaid.MaidListActivity;
 import com.rsi.homemaid.R;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import bean.MaidDataClass;
 import bean.MaidList;
+import bean.Status;
+import database.DatabaseHelper;
 import helper.RoundedImageView;
+import retrofit.ApiClient;
+import retrofit.ApiInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by deepak.sharma on 7/18/2017.
@@ -35,11 +55,14 @@ public class MaidListRecyclerAdapter extends RecyclerView.Adapter<MaidListRecycl
     private List<MaidList> maidLists;
     private Context context;
     private final OnItemClickListener listener;
+    private ApiInterface apiService;
+    private DatabaseHelper databaseHelper;
     public MaidListRecyclerAdapter(Context context, List<MaidList> maidLists, OnItemClickListener listener) {
         this.maidLists = maidLists;
         this.context = context;
         this.listener = listener;
-
+        apiService = ApiClient.getClient().create(ApiInterface.class);
+        databaseHelper = DatabaseHelper.getInstance(context);
     }
 
     @Override
@@ -81,28 +104,57 @@ public class MaidListRecyclerAdapter extends RecyclerView.Adapter<MaidListRecycl
 
 
         if (maidLists.get(position).isFav()){
-           holder.iv_favourite.getDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-           holder.iv_favourite.setAlpha(0.7f);
+            holder.iv_favourite.setLiked(true);
         }else {
-            holder.iv_favourite.getDrawable().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
-            holder.iv_favourite.setAlpha(0.7f);
+            holder.iv_favourite.setLiked(false);
         }
 
-
-        holder.iv_favourite.setOnClickListener(new View.OnClickListener() {
+        holder.iv_favourite.setOnLikeListener(new OnLikeListener() {
             @Override
-            public void onClick(View v) {
-                if (maidLists.get(position).isFav()){
-                    holder.iv_favourite.getDrawable().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
-                    holder.iv_favourite.setAlpha(0.7f);
-                    maidLists.get(position).setFav(false);
-                }else {
-                    holder.iv_favourite.getDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
-                    holder.iv_favourite.setAlpha(0.7f);
-                    maidLists.get(position).setFav(true);
-                }
+            public void liked(LikeButton likeButton) {
+
+
+                Call<Status> call = apiService.addFav(getFavJson(databaseHelper.getUserDetails().get(0).getUserId(), maidLists.get(position).getMadeId(), "True").toString());
+                call.enqueue(new Callback<Status>() {
+                    @Override
+                    public void onResponse(Call<Status> call, Response<Status> response) {
+
+                        if (response.body().getStatus().equalsIgnoreCase("success")){
+                            maidLists.get(position).setFav(true);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<Status> call, Throwable t) {
+                        holder.iv_favourite.setLiked(false);
+                        showCustomToast(holder.itemView, context.getString(R.string.err_message_retrofit));
+                    }
+                });
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                maidLists.get(position).setFav(false);
+
+                Call<Status> call = apiService.addFav(getFavJson(databaseHelper.getUserDetails().get(0).getUserId(), maidLists.get(position).getMadeId(), "False").toString());
+                call.enqueue(new Callback<Status>() {
+                    @Override
+                    public void onResponse(Call<Status> call, Response<Status> response) {
+
+                        if (response.body().getStatus().equalsIgnoreCase("success")){
+                            maidLists.get(position).setFav(false);
+                        }
+
+                    }
+                    @Override
+                    public void onFailure(Call<Status> call, Throwable t) {
+                        holder.iv_favourite.setLiked(true);
+                        showCustomToast(holder.itemView, context.getString(R.string.err_message_retrofit));
+
+                    }
+                });
             }
         });
+
 
         holder.btn_call.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +185,8 @@ public class MaidListRecyclerAdapter extends RecyclerView.Adapter<MaidListRecycl
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         public RoundedImageView iv_pic_maid;
-        public ImageView iv_favourite, iv_veg, iv_non_veg;
+        public ImageView  iv_veg, iv_non_veg;
+        public LikeButton iv_favourite;
         public TextView tv_name, tv_religion, tv_rating, tv_rs, tv_experience, tv_available_time, tv_verified ;
         Button btn_call;
 
@@ -147,7 +200,7 @@ public class MaidListRecyclerAdapter extends RecyclerView.Adapter<MaidListRecycl
             tv_available_time = (TextView) view.findViewById(R.id.tv_available_time_text);
             iv_pic_maid = (RoundedImageView) view.findViewById(R.id.iv_pic_maid);
             tv_verified = (TextView) view.findViewById(R.id.tv_verified);
-            iv_favourite = (ImageView) view.findViewById(R.id.iv_favourite);
+            iv_favourite = (LikeButton) view.findViewById(R.id.iv_favourite);
             iv_non_veg = (ImageView) view.findViewById(R.id.iv_non_veg);
             iv_veg = (ImageView) view.findViewById(R.id.iv_veg);
             btn_call = (Button) view.findViewById(R.id.btn_call);
@@ -171,4 +224,29 @@ public class MaidListRecyclerAdapter extends RecyclerView.Adapter<MaidListRecycl
         void onItemClick(MaidList item);
     }
 
+
+    protected JSONArray getFavJson(String userId, String maidId, String action) {
+        JSONObject paramObject = new JSONObject();
+        JSONArray jsonArray =new JSONArray();
+        try {
+            paramObject.put("userId", userId);
+            paramObject.put("maidId", maidId);
+            paramObject.put("action", action);
+            jsonArray.put(paramObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonArray;
+    }
+
+    protected void showCustomToast(View view, String message){
+        Snackbar snackbar = Snackbar
+                .make(view, message , Snackbar.LENGTH_LONG);
+        View sbView = snackbar.getView();
+        sbView.setBackgroundColor(ContextCompat.getColor(context, R.color.red_color));
+        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(15);
+        snackbar.show();
+    }
 }

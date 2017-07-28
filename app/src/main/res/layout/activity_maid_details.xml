@@ -48,7 +48,11 @@
 
             <include layout="@layout/card_layout_general_information" />
 
+            <include layout="@layout/card_layout_rating"/>
             <include layout="@layout/card_layout_additional_information" />
+
+            <include layout="@layout/card_layout_working_style" />
+            <include layout="@layout/card_layout_currently_working" />
 
 
         </LinearLayout>
@@ -66,5 +70,15 @@
         android:src="@drawable/ic_discuss"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"/>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_call"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/darkgreen"
+        android:src="@android:drawable/stat_sys_phone_call" />
 
 </android.support.design.widget.CoordinatorLayout>
